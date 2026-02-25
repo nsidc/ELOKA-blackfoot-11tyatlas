@@ -6,3 +6,5 @@ Current setup.
   - https://openlayers.org/en/latest/apidoc/module-ol_source_VectorTile-VectorTile.html
   - https://github.com/felt/tippecanoe
 3. Get the outdir into the src/public folder and adjust main.js for the name of the folder.
+4. `npm run build` to create the JS bundle
+5. `npm run dev` to server the application locally

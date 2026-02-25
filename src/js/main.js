@@ -1,19 +1,15 @@
-import Feature from "ol/Feature.js";
 import Map from "ol/Map.js";
 import View from "ol/View.js";
 import TileLayer from "ol/layer/Tile.js";
 import OSM from "ol/source/OSM.js";
 
 import GeoJSON from "ol/format/GeoJSON.js";
-import Circle from "ol/geom/Circle.js";
 import VectorLayer from "ol/layer/Vector.js";
 import VectorSource from "ol/source/Vector.js";
 
 import MVT from "ol/format/MVT.js";
 import VectorTileLayer from "ol/layer/VectorTile.js";
 import VectorTileSource from "ol/source/VectorTile.js";
-// import { TileGrid } from 'ol/tilegrid'
-// import {get as getProjection} from 'ol/proj.js';
 
 import CircleStyle from "ol/style/Circle.js";
 import Fill from "ol/style/Fill.js";
@@ -95,16 +91,6 @@ const styleFunction = function (feature) {
   return styles[feature.getGeometry().getType()];
 };
 
-const geoJSONvectorSource = new VectorSource({
-  format: new GeoJSON(),
-  url: "./public/blackfoot260224.geojson",
-});
-
-const jsonVectorLayer = new VectorLayer({
-  source: geoJSONvectorSource,
-  style: styleFunction,
-});
-
 const vectorLayer = new VectorTileLayer({
   declutter: true,
   source: new VectorTileSource({
@@ -156,31 +142,6 @@ const displayFeatureInfo = function (pixel) {
       hitTolerance: 5,
     },
   );
-  // vectorLayer.getFeatures(pixel).then(function (features) {
-  //   const feature = features.length ? features[0] : undefined;
-  //   const info = document.getElementById("info");
-  //   if (features.length) {
-  //     console.log('displaying feature info')
-  //     const attrs = feature?.values_ ? feature?.values_ : feature?.properties_
-  //     const listHtml = Object.keys(attrs)
-  //       .map((k) => {
-  //         return `<li>${k}: ${attrs[k]}</li>`;
-  //       })
-  //       .join("");
-  //     info.innerHTML = `<ul>${listHtml}</ul>`;
-  //   } else {
-  //     info.innerHTML = "&nbsp;";
-  //   }
-  //   // if (feature !== highlight) {
-  //   //   if (highlight) {
-  //   //     featureOverlay.getSource().removeFeature(highlight);
-  //   //   }
-  //   //   if (feature) {
-  //   //     featureOverlay.getSource().addFeature(feature);
-  //   //   }
-  //   //   highlight = feature;
-  //   // }
-  // });
 };
 
 map.on("click", function (evt) {
