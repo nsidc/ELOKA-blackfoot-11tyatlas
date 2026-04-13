@@ -1,0 +1,10 @@
+---
+pagination:
+  data: media
+  size: 1
+  alias: media
+permalink: "media/{{ media.n2id | slugify }}.html"
+---
+<h1>{{media.name}}</h1>
+<img src="../public/media/{{media.file}}"/>
+<p>{{media.caption}}</p>

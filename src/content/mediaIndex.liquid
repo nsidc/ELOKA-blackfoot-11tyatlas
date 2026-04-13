@@ -1,0 +1,8 @@
+---
+permalink: "media/index.html"
+---
+<ul>
+{%- for m in media %}
+<li><a href="{{ m.n2id | slugify }}">{{m.name}}</a></li>
+{%- endfor -%}
+</ul>
