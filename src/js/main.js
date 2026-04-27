@@ -144,7 +144,8 @@ const displayFeatureInfo = async function (pixel) {
 
 const layerSwitcher = new LayerSwitcher({
   reverse: true,
-  groupSelectStyle: 'group'
+  groupSelectStyle: 'group',
+  activationMode: 'click'
 })
 map.addControl(layerSwitcher)
 
