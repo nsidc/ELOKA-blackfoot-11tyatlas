@@ -1,0 +1,27 @@
+<div class="flex navbar bg-base-100 shadow-sm">
+    <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+        </div>
+        <ul tabindex="-1"
+            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 w-52 shadow">
+            {%- for item in collections.nav -%}
+                <li>
+                    <a href="{{ item.url }}">{{ item.data.title }}</a>
+                </li>
+            {%- endfor -%}
+        </ul>
+    </div>
+    <div class="flex items-end">
+        <a class="btn btn-ghost text-xl">Blackfoot Atlas</a>
+        <div class="hidden lg:inline-block">
+            <ul class="menu menu-horizontal p-0">
+            {%- for item in collections.nav -%}
+                        <li>
+                            <a href="{{ item.url }}">{{ item.data.title }}</a>
+                        </li>
+                    {%- endfor -%}
+            </ul>
+        </div>
+    </div>
+</div>

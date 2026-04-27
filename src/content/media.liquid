@@ -4,6 +4,7 @@ pagination:
   size: 1
   alias: media
 permalink: "media/{{ media.n2id | slugify }}.html"
+layout: default
 ---
 <h1>{{media.name}}</h1>
 <img src="../public/media/{{media.file}}"/>

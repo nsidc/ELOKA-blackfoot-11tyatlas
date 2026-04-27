@@ -1,22 +1,43 @@
 ---
-title: Test Page
+title: Map
+tags: nav
+layout: map
 ---
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="/bundle.css">:
-    <style>
-      .map {
-        width: 100%;
-        height: 1000px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map" class="map"></div>
-    <div id="info">&nbsp;</div>
-    <script type="module" src="public/bundle.js"></script>
-  </body>
-</html>
+  <div id="map" class="map">
+  </div>
+  <div id="legend-container" class="absolute z-10 size-fit bottom-3 left-3 bg-base-100 p-2 rounded-md">
+    <div id="legend-content">
+      <ul id="legend-list" x-data>
+        <template x-for="[id, entry] in Object.entries($store.styles.data)">
+          <li class="flex gap-1">
+            <input x-data type="checkbox" :value="id" x-model="$store.styles.display" class="toggle" />
+            <canvas x-init="$nextTick(() => { $store.styles.drawLegendShapes(entry, $el)})"></canvas>
+            <span x-text="entry.title"></span>
+          </li>
+        </template>
+      </ul>
+    </div>
+  </div>
+    <button class="btn btn-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+      legend
+    </div>
+  </div>
+</button>
+  <div id="featureCard" class="absolute z-10 size-min top-4 right-4 hidden">
+    <div class="card card-border bg-base-100 w-96">
+      <div class="card-body">
+        <h2 id="featureTitle" class="card-title">Card Title</h2>
+        <p id="info"></p>
+        <div class="card-actions justify-end">
+          <button class="btn btn-primary">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+</svg>
