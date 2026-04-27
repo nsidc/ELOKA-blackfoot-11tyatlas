@@ -1,4 +1,5 @@
 import { VentoPlugin } from "eleventy-plugin-vento";
+import { HtmlBasePlugin } from "@11ty/eleventy";
 import fs from 'fs';
 import path from 'path';
 
@@ -20,6 +21,8 @@ export default function (eleventyConfig) {
   eleventyConfig.addPlugin(VentoPlugin);
 
   eleventyConfig.addPassthroughCopy("src/public");
+
+  eleventyConfig.addPlugin(HtmlBasePlugin);
 
   //compile tailwind before eleventy processes the files
   eleventyConfig.on('eleventy.before', async () => {
