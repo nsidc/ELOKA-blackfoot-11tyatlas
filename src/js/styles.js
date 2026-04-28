@@ -196,6 +196,11 @@ let missingFeatures = new Set()
 
 const styleFeature = function (feature) {
   const layersString = feature.getProperties()?.layers
+  if(!layersString) {
+    // console.log('Feature does not have layer string')
+    // console.log(feature)
+    return new Style({})
+  }
   const type = layersString.substring(3, layersString.length - 1)
   const displayed = Alpine.store('styles').display
   if (feature.getId() == selectedId) {

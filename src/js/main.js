@@ -19,9 +19,8 @@ import { getTopLeft, getWidth } from 'ol/extent.js'
 
 import Styles, { styleFeature } from './styles'
 import Alpine from 'alpinejs'
- 
-const DISPLAY_ATTRIBUTES = ['blackfootname', 'englishname', 'literalmeaning', 'refaltnames', 'altspelling', 'altnames', 'description']
 
+const DISPLAY_ATTRIBUTES = ['blackfootname', 'englishname', 'literalmeaning', 'refaltnames', 'altspelling', 'altnames', 'description']
 
 const vectorLayer = new VectorTileLayer({
   declutter: true,
@@ -86,6 +85,16 @@ const map = new Map({
   })
 })
 
+function groupBy(arr, property) {
+  return arr.reduce(function (memo, x) {
+    if (!memo[x[property]]) {
+      memo[x[property]] = []
+    }
+    memo[x[property]].push(x)
+    return memo
+  }, {})
+}
+
 const displayFeatureInfo = async function (pixel) {
   const featureCard = document.getElementById('featureCard')
   featureCard.classList.add('hidden')
@@ -102,26 +111,39 @@ const displayFeatureInfo = async function (pixel) {
     const feature = features[0]
     Styles.setSelectedId(feature.getId())
     const attrs = feature?.values_ ? feature?.values_ : feature?.properties_
-    const listHtml = (
-      await Promise.all(
-        Object.keys(attrs).map(async (k) => {
-          if (k === 'nunaliit_relations') {
-            const imageLinks = await Promise.all(
-              JSON.parse(attrs[k]).map(async (r) => {
-                const insertHtmlResponse = await fetch(`media/${r.doc}_insert.html`)
-                const insertHtml = await insertHtmlResponse.text()
-                return `<li>${insertHtml}</li>`
-              })
-            )
-            return `<li>Archival Material: <ul>${imageLinks.join('')}</ul></li>`
-          } else if (DISPLAY_ATTRIBUTES.includes(k)) {
-            return `<li>${k}: ${attrs[k]}</li>`
-          } else {
-            return `<li class="hidden">${k}: ${attrs[k]}</li>`
-          }
+    let listHtml = Object.keys(attrs)
+      .map((k) => {
+        if (k === 'nunaliit_relations') {
+          return ''
+        } else if (DISPLAY_ATTRIBUTES.includes(k)) {
+          return `<li>${k}: ${attrs[k]}</li>`
+        } else {
+          return `<li class="hidden">${k}: ${attrs[k]}</li>`
+        }
+      })
+      .join('')
+
+    if (Object.keys(attrs).includes('nunaliit_relations')) {
+      const relationsObj = JSON.parse(attrs['nunaliit_relations'])
+      const relatedRecordsByType = groupBy(relationsObj, 'type')
+      const types = Object.keys(relatedRecordsByType)
+      if (types.includes('demo_archive')) {
+        const imageLinks = await Promise.all(
+          relatedRecordsByType['demo_archive'].map(async (r) => {
+            const insertHtmlResponse = await fetch(`media/${r.doc}_insert.html`)
+            const insertHtml = await insertHtmlResponse.text()
+            return `<li>${insertHtml}</li>`
+          })
+        )
+        listHtml = listHtml + `<li>Archival Material: <ul>${imageLinks.join('')}</ul></li>`
+      }
+      if (types.includes('demo_doc')) {
+        const relatedDocs = relatedRecordsByType['demo_doc'].map( (r) => {
+          
         })
-      )
-    ).join('')
+        listHtml = listHtml + `<li>Related docs: <ul>${relatedDocs.join('')}</ul></li>`
+      }
+    }
 
     const featureTitle = document.getElementById('featureTitle')
     if (attrs?.blackfootname) {
@@ -177,7 +199,5 @@ Alpine.effect(() => {
   const displayed = Alpine.store('styles').display
   vectorLayer.changed()
 })
-
-
 
 // Styles.fillLegend(vectorLayer)

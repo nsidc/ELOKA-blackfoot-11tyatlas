@@ -1,0 +1,21 @@
+---
+permalink: "features.json"
+---
+{
+    "features": [
+        {%- for f in demo_doc.features %}
+            {
+                "id": {{f.id | json}},
+                "blackfootname": {{ f.properties.blackfootname | json}},
+                "englishname": {{ f.properties.englishname | json}},
+                "literalmeaning": {{ f.properties.literalmeaning | json}},
+                "refaltnames": {{ f.properties.refaltnames | json}},
+                {% if f.properties.altspelling %}"altspelling": {{ f.properties.altspelling | json}} , {% endif %}
+                {% if f.properties.altnames %}"altnames": {{ f.properties.altnames | json}} , {% endif %}
+                {% if f.properties.description %}"description": {{ f.properties.description | json}} , {% endif %}
+                {% if f.properties.nunaliit_hoverSound %}"nunaliit_hoverSound": {{ f.properties.nunaliit_hoverSound | json}} , {% endif %}
+                {% if f.properties.image %}"image": {{ f.properties.image | json}} {% endif %}
+            }{% unless forloop.last %}, {% endunless -%}
+        {%- endfor -%}
+    ] 
+}

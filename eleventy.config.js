@@ -6,6 +6,7 @@ import path from 'path';
 import cssnano from 'cssnano';
 import postcss from 'postcss';
 import tailwindcss from '@tailwindcss/postcss';
+import htmlmin from "html-minifier-terser";
 
 export default function (eleventyConfig) {
   const processor = postcss([
@@ -44,6 +45,23 @@ export default function (eleventyConfig) {
 
     fs.writeFileSync(tailwindOutputPath, result.css);
   });
+
+  eleventyConfig.addTransform("jsonmin", function (content) {
+		// String conversion to handle `permalink: false`
+		if ((this.page.outputPath || "").endsWith(".json")) {
+			let minified = htmlmin.minify(content, {
+				// useShortDoctype: true,
+        minifyJS: true,
+				removeComments: true,
+				collapseWhitespace: true,
+			});
+
+			return minified;
+		}
+
+		// If not an HTML output, return content as-is
+		return content;
+	});
 
   return {
     dir: {

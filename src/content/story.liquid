@@ -1,0 +1,11 @@
+---
+pagination:
+  data: demo_story.features
+  size: 1
+  alias: story
+permalink: "story/{{ story.id | slugify }}.html"
+layout: default
+---
+<h1>{{story.properties.title}}</h1>
+<h3>{{story.properties.reference}}</h3>
+<p>{{story.properties.description}}</p>
