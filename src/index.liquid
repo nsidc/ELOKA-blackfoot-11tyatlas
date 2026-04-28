@@ -5,6 +5,17 @@ layout: map
 ---
   <div id="map" class="map">
   </div>
+  <div id="featureCard" class="absolute z-10 size-min top-4 right-4 hidden">
+    <div class="card card-border bg-base-100 w-96 max-h-[calc(100vh-150px)] overflow-y-auto">
+      <div class="card-body">
+        <h2 id="featureTitle" class="card-title">Card Title</h2>
+        <p id="info"></p>
+        <div class="card-actions justify-end">
+          <!-- <button class="btn btn-primary">Close</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="legend-container" class="absolute z-10 size-fit bottom-3 left-3 bg-base-100 p-2 rounded-md">
     <div id="legend-content">
       <ul id="legend-list" x-data>
@@ -23,18 +34,6 @@ layout: map
         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
       </svg>
       legend
-    </div>
-  </div>
-</button> -->
-  <div id="featureCard" class="absolute z-10 size-min top-4 right-4 hidden">
-    <div class="card card-border bg-base-100 w-96">
-      <div class="card-body">
-        <h2 id="featureTitle" class="card-title">Card Title</h2>
-        <p id="info"></p>
-        <div class="card-actions justify-end">
-          <!-- <button class="btn btn-primary">Close</button> -->
-        </div>
-      </div>
-    </div>
-  </div>
+    </button> -->
+  
 </svg>

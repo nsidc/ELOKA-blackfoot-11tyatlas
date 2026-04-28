@@ -155,7 +155,7 @@ const displayFeatureInfo = async function (pixel) {
         storyHtml += storyParts.join('')
       }
       if (types.includes('demo_doc')) {
-        const relatedDocs = relatedRecordsByType['demo_doc'].map((r) => {})
+        const relatedDocs = relatedRecordsByType['demo_doc'].map((r) => r.tid)
         listHtml = listHtml + `<li>Related docs: <ul>${relatedDocs.join('')}</ul></li>`
       }
     }
