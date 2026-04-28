@@ -22,6 +22,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPlugin(VentoPlugin);
 
   eleventyConfig.addPassthroughCopy("src/public");
+  eleventyConfig.addPassthroughCopy({"src/_data/links.json": "public/links.json"});
 
   eleventyConfig.addPlugin(HtmlBasePlugin);
 

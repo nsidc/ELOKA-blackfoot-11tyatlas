@@ -6,6 +6,8 @@ pagination:
 permalink: "story/{{ story.id | slugify }}.html"
 layout: default
 ---
-<h1>{{story.properties.title}}</h1>
-<h3>{{story.properties.reference}}</h3>
-<p>{{story.properties.description}}</p>
+<div class="p-6">
+  <div class="font-semibold">{{story.properties.title}}</div>
+  <div class="italic text-sm">{{story.properties.reference}}</div>
+  <div class="pt-3">{{story.properties.description}}</div>
+</div>

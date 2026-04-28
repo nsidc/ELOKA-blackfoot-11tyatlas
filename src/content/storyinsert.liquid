@@ -1,0 +1,16 @@
+---
+pagination:
+  data: demo_story.features
+  size: 1
+  alias: story
+permalink: "story/{{ story.id | slugify }}_insert.html"
+---
+<div tabindex="0" class="collapse collapse-arrow bg-base-100 border-base-300 border">
+  <div class="collapse-title">
+    <div class="font-semibold">{{story.properties.title}}</div>
+    <div class="italic text-sm">{{story.properties.reference}}</div>
+  </div>
+  <div class="collapse-content text-sm">
+    <div class="text-sm">{{story.properties.description}}</div>
+  </div>
+</div>

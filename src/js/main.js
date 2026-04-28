@@ -21,6 +21,12 @@ import Styles, { styleFeature } from './styles'
 import Alpine from 'alpinejs'
 
 const DISPLAY_ATTRIBUTES = ['blackfootname', 'englishname', 'literalmeaning', 'refaltnames', 'altspelling', 'altnames', 'description']
+let links = {}
+
+fetch('./public/links.json')
+  .then((r) => r.json())
+  .then((d) => links = d)
+  .catch((e) => console.error("Error loading links.json"))
 
 const vectorLayer = new VectorTileLayer({
   declutter: true,
@@ -123,24 +129,33 @@ const displayFeatureInfo = async function (pixel) {
       })
       .join('')
 
-    if (Object.keys(attrs).includes('nunaliit_relations')) {
-      const relationsObj = JSON.parse(attrs['nunaliit_relations'])
-      const relatedRecordsByType = groupBy(relationsObj, 'type')
+    let storyHtml = ''
+    if (links.hasOwnProperty(feature.getId())) {
+      const relationsObj = links[feature.getId()]
+      const relatedRecordsByType = groupBy(relationsObj, 't')
       const types = Object.keys(relatedRecordsByType)
       if (types.includes('demo_archive')) {
         const imageLinks = await Promise.all(
           relatedRecordsByType['demo_archive'].map(async (r) => {
-            const insertHtmlResponse = await fetch(`media/${r.doc}_insert.html`)
+            const insertHtmlResponse = await fetch(`media/${r.tid}_insert.html`)
             const insertHtml = await insertHtmlResponse.text()
             return `<li>${insertHtml}</li>`
           })
         )
         listHtml = listHtml + `<li>Archival Material: <ul>${imageLinks.join('')}</ul></li>`
       }
+      if (types.includes('demo_story')) {
+        storyHtml += '<h3>Stories</h3>'
+        const storyParts = await Promise.all(
+          relatedRecordsByType['demo_story'].map(async (r) => {
+            const insertHtmlResponse = await fetch(`story/${r.tid}_insert.html`)
+            return await insertHtmlResponse.text()
+          })
+        )
+        storyHtml += storyParts.join('')
+      }
       if (types.includes('demo_doc')) {
-        const relatedDocs = relatedRecordsByType['demo_doc'].map( (r) => {
-          
-        })
+        const relatedDocs = relatedRecordsByType['demo_doc'].map((r) => {})
         listHtml = listHtml + `<li>Related docs: <ul>${relatedDocs.join('')}</ul></li>`
       }
     }
@@ -151,11 +166,11 @@ const displayFeatureInfo = async function (pixel) {
     } else {
       featureTitle.innerText = 'Feature Info'
     }
-    info.innerHTML = `<ul>${listHtml}</ul>`
+    info.innerHTML = `<ul>${listHtml}</ul>${storyHtml}`
 
     if (Object.keys(attrs).includes()) {
       links
-      info.innerHTML = `<ul>${listHtml}</ul>`
+      info.innerHTML = `<ul>${listHtml}</ul>${storyHtml}`
     }
     featureCard.classList.remove('hidden')
   } else {
