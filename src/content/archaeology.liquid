@@ -1,0 +1,13 @@
+---
+pagination:
+  data: demo_archy.features
+  size: 1
+  alias: archaeology
+permalink: "archaeology/{{ archaeology.id | slugify }}.html"
+layout: default
+---
+<div class="p-6 max-w-6xl">
+  <div class="font-semibold">{{archaeology.properties.title}}</div>
+  <div class="italic text-sm">{{archaeology.properties.reference}}</div>
+  <div class="pt-3">{{archaeology.properties.description | newline_to_br}}</div>
+</div>

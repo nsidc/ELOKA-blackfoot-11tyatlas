@@ -1,0 +1,37 @@
+---
+permalink: "archaeology/index.html"
+tags: nav
+title: Archaeology
+layout: default
+---
+<div class="px-4 pt-10 pb-24 max-w-6xl m-auto">
+<h1 class="text-xl px-4">Archaeology</h1>
+<p class="pt-2 px-4 pb-5">
+This atlas marks the (approximate, as required by law) location of important archaeological sites within the Blackfoot traditional territory. Some of them have traditional Blackfoot names.
+
+Each archaeological site shown in the atlas is linked to information that briefly describes and explains related archaeological and/or scientific concepts.
+</p>
+
+<h1 class="text-lg px-4">Topics</h1>
+{%- for a in demo_archy.features %}
+<details class="collapse bg-base-100 border border-base-300" name="my-accordion-det-1">
+  <summary class="collapse-title">
+    <div class="flex justify-between">
+        <div class="font-semibold">{{a.properties.title}}</div>
+        <div class="justify-end">
+            <a role="button" href="{{ a.id | slugify }}.html">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+
+            </a>
+        </div>
+    </div>
+    <div class="italic text-sm">{{a.properties.reference}}</div>
+  </summary>
+  <div class="collapse-content">
+    {{a.properties.description | newline_to_br }}
+  </div>
+</details>
+{%- endfor -%}
+</div>

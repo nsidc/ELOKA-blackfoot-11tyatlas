@@ -1,13 +1,13 @@
 ---
 permalink: "media/index.html"
 tags: nav
-title: Media
+title: Archival Material
 layout: default
 ---
-<div class="grid grid-cols-1 md:grid-cols-4 gap-1 md:gap-10 p-5">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-1 lg:gap-10 p-5">
     {%- for m in media %}
     <a href="{{ m.n2id | slugify }}" class="text-center">
-        <img class="pt-1 pb-3 px-5 md:px-10" src="../public/media/{{m.file}}"/>
+        <img class="pt-1 pb-3 px-5 lg:px-10" src="../public/media/{{m.file}}"/>
         <div class="font-semibold">{{m.name}}</div>
         <div class="text-xs">{{m.caption}}</div>
     </a>

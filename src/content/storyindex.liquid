@@ -1,0 +1,34 @@
+---
+permalink: "story/index.html"
+tags: nav
+title: Stories
+layout: default
+---
+<div class="px-4 pt-10 pb-24 max-w-6xl m-auto">
+<h1 class="text-xl px-4">Stories</h1>
+<p class="pt-2 px-4 pb-5">
+Blackfoot stories or oral history talk of many places. In this atlas we collected “place” stories from published accounts, most of them recorded by 20th century ethnographers such as George Grinnell and Clark Wissler. 
+</p>
+
+{%- for s in demo_story.features %}
+<details class="collapse bg-base-100 border border-base-300" name="my-accordion-det-1">
+  <summary class="collapse-title">
+    <div class="flex justify-between">
+        <div class="font-semibold">{{s.properties.title}}</div>
+        <div class="justify-end">
+            <a role="button" href="{{ s.id | slugify }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+
+            </a>
+        </div>
+    </div>
+    <div class="italic text-sm">{{s.properties.reference}}</div>
+  </summary>
+  <div class="collapse-content">
+    {{s.properties.description | newline_to_br }}
+  </div>
+</details>
+{%- endfor -%}
+</div>
