@@ -163,21 +163,6 @@ const selectedStyles = {
   })
 }
 
-let selectedId = -1
-let hoverId = -1
-
-const setSelectedId = function (id) {
-  selectedId = id
-}
-
-const setHoverId = function (id) {
-  hoverId = id
-}
-
-const getHoverId = function () {
-  return hoverId
-}
-
 const getGenericType = function (feature) {
   const t = feature.getGeometry().getType()
   if (t == 'Point') {
@@ -203,9 +188,9 @@ const styleFeature = function (feature) {
   }
   const type = layersString.substring(3, layersString.length - 1)
   const displayed = Alpine.store('styles').display
-  if (feature.getId() == selectedId) {
+  if (feature.getId() == Alpine.store('styles').selectedId) {
     return selectedStyles[getGenericType(feature)]
-  } else if (feature.getId() == hoverId) {
+  } else if (feature.getId() == Alpine.store('styles').hoverId) {
     return hoverStyles[getGenericType(feature)]
   } else if (!displayed.includes(type)) {
     //this removes the feature
@@ -239,11 +224,29 @@ window.Alpine = Alpine
 Alpine.store('styles', {
   data: styles,
   display: Object.keys(styles),
+  hoverId: -1,
+  selectedId: -1,
   entries() {
     return Object.keys(this.data)
   },
   count() {
     return Object.keys(this.data).length
+  },
+  setHover(id) {
+    if(id != this.hoverId) {
+      this.hoverId = id
+    }
+  },
+  unsetHover() {
+    this.hoverId = -1
+  },
+  setSelected(id) {
+    if(id != this.selectedId) {
+      this.selectedId = id
+    }
+  },
+  unsetSelected() {
+    this.selectedId = -1
   },
   drawLegendShapes(entry, canvas) {
     const vectorContext = toContext(canvas.getContext('2d'), { size: [60, 20] })
@@ -283,5 +286,5 @@ Alpine.store('styles', {
 
 Alpine.start()
 
-export default { fillLegend, styleFeature, setSelectedId, setHoverId, getHoverId, styles }
-export { fillLegend, styleFeature, setSelectedId, setHoverId, getHoverId, styles }
+export default { fillLegend, styleFeature, styles }
+export { fillLegend, styleFeature, styles }

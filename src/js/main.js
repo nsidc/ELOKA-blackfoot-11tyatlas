@@ -25,8 +25,8 @@ let links = {}
 
 fetch('./public/links.json')
   .then((r) => r.json())
-  .then((d) => links = d)
-  .catch((e) => console.error("Error loading links.json"))
+  .then((d) => (links = d))
+  .catch((e) => console.error('Error loading links.json'))
 
 const vectorLayer = new VectorTileLayer({
   declutter: true,
@@ -101,11 +101,80 @@ function groupBy(arr, property) {
   }, {})
 }
 
-const displayFeatureInfo = async function (pixel) {
+const displayFeatureInfo = async function (id, props) {
+  Alpine.store('styles').setSelected(id)
+  const featureCard = document.getElementById('featureCard')
+  const info = document.getElementById('info')
+
+  let listHtml = Object.keys(props)
+    .map((k) => {
+      if (k === 'nunaliit_relations') {
+        return ''
+      } else if (DISPLAY_ATTRIBUTES.includes(k)) {
+        return `<li>${k}: ${props[k]}</li>`
+      } else {
+        return `<li class="hidden">${k}: ${props[k]}</li>`
+      }
+    })
+    .join('')
+
+  let storyHtml = ''
+  if (links.hasOwnProperty(id)) {
+    const relationsObj = links[id]
+    const relatedRecordsByType = groupBy(relationsObj, 't')
+    const types = Object.keys(relatedRecordsByType)
+    if (types.includes('demo_archive')) {
+      const imageLinks = await Promise.all(
+        relatedRecordsByType['demo_archive'].map(async (r) => {
+          const insertHtmlResponse = await fetch(`media/${r.tid}_insert.html`)
+          const insertHtml = await insertHtmlResponse.text()
+          return `<li>${insertHtml}</li>`
+        })
+      )
+      listHtml = listHtml + `<li>Archival Material: <ul>${imageLinks.join('')}</ul></li>`
+    }
+    if (types.includes('demo_story')) {
+      storyHtml += '<h3>Stories</h3>'
+      const storyParts = await Promise.all(
+        relatedRecordsByType['demo_story'].map(async (r) => {
+          const insertHtmlResponse = await fetch(`story/${r.tid}_insert.html`)
+          return await insertHtmlResponse.text()
+        })
+      )
+      storyHtml += storyParts.join('')
+    }
+    if (types.includes('demo_doc')) {
+      const relatedDocs = relatedRecordsByType['demo_doc'].map(
+        (r) => `<p x-data @mouseenter="$dispatch('hover', '${r.tid}')" @mouseleave="$dispatch('unhover')">${r.tid}</p>`
+      )
+      listHtml = listHtml + `<li>Related docs: <ul>${relatedDocs.join('')}</ul></li>`
+    }
+  }
+
+  const featureTitle = document.getElementById('featureTitle')
+  if (props?.blackfootname) {
+    featureTitle.innerText = props.blackfootname
+  } else {
+    featureTitle.innerText = 'Feature Info'
+  }
+  info.innerHTML = `<ul>${listHtml}</ul>${storyHtml}`
+
+  if (Object.keys(props).includes()) {
+    links
+    info.innerHTML = `<ul>${listHtml}</ul>${storyHtml}`
+  }
+  featureCard.classList.remove('hidden')
+}
+
+const closeFeatureInfo = function () {
+  Alpine.store('styles').unsetSelected()
   const featureCard = document.getElementById('featureCard')
   featureCard.classList.add('hidden')
   const info = document.getElementById('info')
   info.innerHTML = '&nbsp;'
+}
+
+const displayFeatureAtPixel = async function (pixel) {
   const features = map.getFeaturesAtPixel(pixel, {
     hitTolerance: 5
   })
@@ -115,68 +184,11 @@ const displayFeatureInfo = async function (pixel) {
   }
   if (features.length > 0) {
     const feature = features[0]
-    Styles.setSelectedId(feature.getId())
-    const attrs = feature?.values_ ? feature?.values_ : feature?.properties_
-    let listHtml = Object.keys(attrs)
-      .map((k) => {
-        if (k === 'nunaliit_relations') {
-          return ''
-        } else if (DISPLAY_ATTRIBUTES.includes(k)) {
-          return `<li>${k}: ${attrs[k]}</li>`
-        } else {
-          return `<li class="hidden">${k}: ${attrs[k]}</li>`
-        }
-      })
-      .join('')
-
-    let storyHtml = ''
-    if (links.hasOwnProperty(feature.getId())) {
-      const relationsObj = links[feature.getId()]
-      const relatedRecordsByType = groupBy(relationsObj, 't')
-      const types = Object.keys(relatedRecordsByType)
-      if (types.includes('demo_archive')) {
-        const imageLinks = await Promise.all(
-          relatedRecordsByType['demo_archive'].map(async (r) => {
-            const insertHtmlResponse = await fetch(`media/${r.tid}_insert.html`)
-            const insertHtml = await insertHtmlResponse.text()
-            return `<li>${insertHtml}</li>`
-          })
-        )
-        listHtml = listHtml + `<li>Archival Material: <ul>${imageLinks.join('')}</ul></li>`
-      }
-      if (types.includes('demo_story')) {
-        storyHtml += '<h3>Stories</h3>'
-        const storyParts = await Promise.all(
-          relatedRecordsByType['demo_story'].map(async (r) => {
-            const insertHtmlResponse = await fetch(`story/${r.tid}_insert.html`)
-            return await insertHtmlResponse.text()
-          })
-        )
-        storyHtml += storyParts.join('')
-      }
-      if (types.includes('demo_doc')) {
-        const relatedDocs = relatedRecordsByType['demo_doc'].map((r) => r.tid)
-        listHtml = listHtml + `<li>Related docs: <ul>${relatedDocs.join('')}</ul></li>`
-      }
-    }
-
-    const featureTitle = document.getElementById('featureTitle')
-    if (attrs?.blackfootname) {
-      featureTitle.innerText = attrs.blackfootname
-    } else {
-      featureTitle.innerText = 'Feature Info'
-    }
-    info.innerHTML = `<ul>${listHtml}</ul>${storyHtml}`
-
-    if (Object.keys(attrs).includes()) {
-      links
-      info.innerHTML = `<ul>${listHtml}</ul>${storyHtml}`
-    }
-    featureCard.classList.remove('hidden')
+    const featureInfo = feature.getProperties()
+    displayFeatureInfo(feature.getId(), featureInfo)
   } else {
-    Styles.setSelectedId(-1)
+    Alpine.store('styles').unsetSelected()
   }
-  vectorLayer.changed()
 }
 
 const layerSwitcher = new LayerSwitcher({
@@ -187,7 +199,7 @@ const layerSwitcher = new LayerSwitcher({
 map.addControl(layerSwitcher)
 
 map.on('click', function (evt) {
-  displayFeatureInfo(evt.pixel)
+  displayFeatureAtPixel(evt.pixel)
 })
 
 const hoverFeatureInfo = function (pixel) {
@@ -195,11 +207,10 @@ const hoverFeatureInfo = function (pixel) {
     hitTolerance: 3
   })
   if (features.length == 0) {
-    Styles.setHoverId(-1)
-    vectorLayer.changed()
-  } else if (Styles.getHoverId() != features[0].getId()) {
-    Styles.setHoverId(features[0].getId())
-    vectorLayer.changed()
+    Alpine.store('styles').unsetHover()
+  } else {
+    //if (Styles.getHoverId() != features[0].getId()) {
+    Alpine.store('styles').setHover(features[0].getId())
   }
 }
 
@@ -212,6 +223,16 @@ map.on('pointermove', function (evt) {
 
 Alpine.effect(() => {
   const displayed = Alpine.store('styles').display
+  vectorLayer.changed()
+})
+
+Alpine.effect(() => {
+  const hoverId = Alpine.store('styles').hoverId
+  vectorLayer.changed()
+})
+
+Alpine.effect(() => {
+  const selectedId = Alpine.store('styles').selectedId
   vectorLayer.changed()
 })
 
