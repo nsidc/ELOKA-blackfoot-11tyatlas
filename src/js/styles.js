@@ -186,14 +186,17 @@ const styleFeature = function (feature) {
     // console.log(feature)
     return new Style({})
   }
-  const type = layersString.substring(3, layersString.length - 1)
   const displayed = Alpine.store('styles').display
+  let type = layersString.substring(3, layersString.length - 1)
+  if(type.includes(',')) {
+    const types = type.split(',')
+    type = types.find((t) => displayed.includes(t))
+  }
   if (feature.getId() == Alpine.store('styles').selectedId) {
     return selectedStyles[getGenericType(feature)]
   } else if (feature.getId() == Alpine.store('styles').hoverId) {
     return hoverStyles[getGenericType(feature)]
   } else if (!displayed.includes(type)) {
-    //this removes the feature
     return new Style({})
   }
 
@@ -203,21 +206,8 @@ const styleFeature = function (feature) {
   }
 
   missingFeatures.add(feature.getId())
-  // console.log(`No style for id ${feature.getId()} to type ${type}, geotype ${getGenericType(feature)}`)
+  console.log(`No style for id ${feature.getId()} to type ${type}, geotype ${getGenericType(feature)}`)
   return new Style({})
-}
-
-const fillLegend = function (layer) {
-  // const legendList = document.getElementById('legend-list')
-  // legendList.innerHTML = ''
-  // for(const entry in styles) {
-  // }
-  // const s = layer.getSource()
-  // console.log(s)
-  // const features = s.getFeatures()
-  // for(f in features) {
-  //     console.log(styleFeature(f))
-  // }
 }
 
 window.Alpine = Alpine
@@ -286,5 +276,5 @@ Alpine.store('styles', {
 
 Alpine.start()
 
-export default { fillLegend, styleFeature, styles }
-export { fillLegend, styleFeature, styles }
+export default { styleFeature, styles }
+export { styleFeature, styles }

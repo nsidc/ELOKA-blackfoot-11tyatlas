@@ -1,18 +1,18 @@
 ---
 pagination:
-  data: demo_story.features
+  data: demo_archy.features
   size: 1
-  alias: story
-permalink: "story/{{ story.id | slugify }}_insert.html"
+  alias: a
+permalink: "archaeology/{{ a.id | slugify }}_insert.html"
 ---
 <div class="collapse collapse-arrow bg-base-100 border-base-300 border">
   <input id="collapse-1-toggle" type="checkbox" class="peer" />
   <label for="collapse-1-toggle" class="fixed inset-0 hidden peer-checked:block"></label>
   <div class="collapse-title">
-    <div class="font-semibold">{{story.properties.title}}</div>
-    <div class="italic text-sm">{{story.properties.reference}}</div>
+    <div class="font-semibold">{{a.properties.title}}</div>
+    <div class="italic text-sm">{{a.properties.reference}}</div>
   </div>
   <div class="collapse-content text-sm">
-    <div class="text-sm">{{story.properties.description}}</div>
+    <div class="text-sm">{{a.properties.description}}</div>
   </div>
 </div>

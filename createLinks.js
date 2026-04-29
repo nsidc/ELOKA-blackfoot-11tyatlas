@@ -43,7 +43,7 @@ const processFile = async function (filepath, type) {
 }
 
 await processFile('./src/_data/demo_story.json', 'demo_story')
-await processFile('./src/_data/demo_archy.geojson', 'demo_archy')
+await processFile('./src/_data/demo_archy.json', 'demo_archy')
 await processFile('./src/_data/demo_archive.geojson', 'demo_archive')
 await processFile('./src/_data/demo_doc.json', 'demo_doc')
 fs.writeFileSync("./src/_data/links.json", JSON.stringify(links), 'utf8')

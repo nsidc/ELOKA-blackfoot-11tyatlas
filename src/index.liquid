@@ -6,9 +6,27 @@ layout: map
   <div id="map" class="map">
   </div>
   <div x-data id="featureCard" class="absolute z-10 size-min top-4 right-4 hidden" @hover="$store.styles.setHover($event.detail)">
-    <div class="card card-border bg-base-100 w-96 max-h-[calc(100vh-150px)] overflow-y-auto">
+    <div class="card card-border bg-base-100 w-120 max-h-[calc(100vh-150px)] overflow-y-auto">
       <div class="card-body">
-        <h2 id="featureTitle" class="card-title">Card Title</h2>
+        <div class="card-title flex justify-between">
+          <h2 id="featureTitle"></h2>
+          <div class="justify-end">
+            <button @click="$store.feature.unselect()" class="btn btn-square btn-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
         <p id="info"></p>
         <div class="card-actions justify-end">
           <!-- <button class="btn btn-primary">Close</button> -->

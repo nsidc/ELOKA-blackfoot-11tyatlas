@@ -40,6 +40,8 @@ const vectorLayer = new VectorTileLayer({
   style: Styles.styleFeature
 })
 
+const featureCard = document.getElementById('featureCard')
+
 const projection = getProjection('EPSG:3857')
 const projectionExtent = projection.getExtent()
 const size = getWidth(projectionExtent) / 256
@@ -103,22 +105,40 @@ function groupBy(arr, property) {
 
 const displayFeatureInfo = async function (id, props) {
   Alpine.store('styles').setSelected(id)
-  const featureCard = document.getElementById('featureCard')
   const info = document.getElementById('info')
 
-  let listHtml = Object.keys(props)
-    .map((k) => {
-      if (k === 'nunaliit_relations') {
-        return ''
-      } else if (DISPLAY_ATTRIBUTES.includes(k)) {
-        return `<li>${k}: ${props[k]}</li>`
-      } else {
-        return `<li class="hidden">${k}: ${props[k]}</li>`
-      }
-    })
-    .join('')
+  let infoHtml = ''
+  const pkeys = Object.keys(props)
+  if(pkeys.includes('blackfootname')) {
+    infoHtml += `<tr><th>Blackfoot Name</th><td>${props.blackfootname}</td></tr>`
+  }
+  if(pkeys.includes('englishname')) {
+    infoHtml += `<tr><th>English Name</th><td>${props.englishname}</td></tr>`
+  }
+  if(pkeys.includes('literalmeaning')) {
+    infoHtml += `<tr><th>Literal Meaning</th><td>${props.literalmeaning}</td></tr>`
+  }
+  if(props?.refaltname) {
+    infoHtml += `<tr><th>Reference</th><td>${props.refaltnames}</td></tr>`
+  }
+  if(props?.altspelling) {
+    infoHtml += `<tr><th>Alt. Spellings</th><td>${props.altspelling}</td></tr>`
+  }
+  if(props?.altnames) {
+    infoHtml += `<tr><th>Alt. Names</th><td>${props.altnames}</td></tr>`
+  }
+  if(props?.description) {
+    infoHtml += `<tr><th>Description</th><td>${props.description}</td></tr>`
+  }
+  if(pkeys.includes('nunaliit_hoverSound')) {
+    console.log('hoversound not handled for ' + id)
+  }
+  if(pkeys.includes('image')) {
+    console.log('image not handled for ' + id)
+  }
 
-  let storyHtml = ''
+
+  let relatedHtml = ''
   if (links.hasOwnProperty(id)) {
     const relationsObj = links[id]
     const relatedRecordsByType = groupBy(relationsObj, 't')
@@ -131,23 +151,48 @@ const displayFeatureInfo = async function (id, props) {
           return `<li>${insertHtml}</li>`
         })
       )
-      listHtml = listHtml + `<li>Archival Material: <ul>${imageLinks.join('')}</ul></li>`
+      relatedHtml += `<ul class="list bg-base-100 rounded-box shadow-md my-3">
+<li class="p-4 pb-2 text-sm opacity-90 tracking-wide">Archival Material</li>${imageLinks.join('')}</ul>`
     }
     if (types.includes('demo_story')) {
-      storyHtml += '<h3>Stories</h3>'
+      relatedHtml += '<h3>Stories</h3>'
       const storyParts = await Promise.all(
         relatedRecordsByType['demo_story'].map(async (r) => {
           const insertHtmlResponse = await fetch(`story/${r.tid}_insert.html`)
           return await insertHtmlResponse.text()
         })
       )
-      storyHtml += storyParts.join('')
+      relatedHtml += storyParts.join('')
+    }
+    if (types.includes('demo_archy')) {
+      relatedHtml += '<h3>Archaeology</h3>'
+      const parts = await Promise.all(
+        relatedRecordsByType['demo_archy'].map(async (r) => {
+          const insertHtmlResponse = await fetch(`archaeology/${r.tid}_insert.html`)
+          return await insertHtmlResponse.text()
+        })
+      )
+      relatedHtml += parts.join('')
     }
     if (types.includes('demo_doc')) {
-      const relatedDocs = relatedRecordsByType['demo_doc'].map(
-        (r) => `<p x-data @mouseenter="$dispatch('hover', '${r.tid}')" @mouseleave="$dispatch('unhover')">${r.tid}</p>`
+      const relatedDocs = await Promise.all(
+        relatedRecordsByType['demo_doc'].map(async (r) => {
+          const docInfoRes = await fetch(`features/${r.tid}.json`)
+          if (!docInfoRes.ok) {
+            console.error('Error fetching json file')
+          }
+          const docInfo = await docInfoRes.json()
+          return `<li class="list-row" x-data 
+            @mouseenter="$dispatch('hover', '${r.tid}')" @mouseleave="$dispatch('unhover')" @click="$store.feature.select('${r.tid}')">
+            <div>
+              <div class="font-semibold">${docInfo.blackfootname}</div>
+              <div class="text-xs">${docInfo.englishname}</div>
+            </div>
+          </li>`
+        })
       )
-      listHtml = listHtml + `<li>Related docs: <ul>${relatedDocs.join('')}</ul></li>`
+      relatedHtml = relatedHtml + `<ul class="list bg-base-100 rounded-box shadow-md">
+<li class="p-4 pb-2 text-sm opacity-90 tracking-wide">Related features</li>${relatedDocs.join('')}</ul>`
     }
   }
 
@@ -157,12 +202,7 @@ const displayFeatureInfo = async function (id, props) {
   } else {
     featureTitle.innerText = 'Feature Info'
   }
-  info.innerHTML = `<ul>${listHtml}</ul>${storyHtml}`
-
-  if (Object.keys(props).includes()) {
-    links
-    info.innerHTML = `<ul>${listHtml}</ul>${storyHtml}`
-  }
+  info.innerHTML = `<table class="table-sm"><tbody>${infoHtml}</tbody></table>${relatedHtml}`
   featureCard.classList.remove('hidden')
 }
 
@@ -172,6 +212,10 @@ const closeFeatureInfo = function () {
   featureCard.classList.add('hidden')
   const info = document.getElementById('info')
   info.innerHTML = '&nbsp;'
+}
+
+const displayFeatureById = async function(id) {
+  console.log(id)
 }
 
 const displayFeatureAtPixel = async function (pixel) {
@@ -187,7 +231,7 @@ const displayFeatureAtPixel = async function (pixel) {
     const featureInfo = feature.getProperties()
     displayFeatureInfo(feature.getId(), featureInfo)
   } else {
-    Alpine.store('styles').unsetSelected()
+    Alpine.store('feature').unselect()
   }
 }
 
@@ -219,6 +263,20 @@ map.on('pointermove', function (evt) {
     return
   }
   hoverFeatureInfo(evt.pixel)
+})
+
+Alpine.store('feature', {
+  selectedId: -1,
+  async select(id) {
+    this.selectedId = id
+    const docInfoRes = await fetch(`features/${id}.json`)
+    const props = docInfoRes.json()
+    displayFeatureInfo(id, props)
+  },
+  unselect() {
+    this.selectedId = -1
+    closeFeatureInfo()
+  }
 })
 
 Alpine.effect(() => {
