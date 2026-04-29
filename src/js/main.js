@@ -56,7 +56,7 @@ for (let z = 0; z < 19; ++z) {
 const s2cloudlessLayer = new TileLayer({
   title: 's2cloudless-2024_3857',
   type: 'base',
-  visible: false,
+  visible: true,
   source: new WMTS({
     attributions:
       '<i><a class="a-light" xmlns:dct="http://purl.org/dc/terms/" href="https://s2maps.eu" property="dct:title">Sentinel-2 cloudless - https://s2maps.eu</a> by <a class="a-light" xmlns:cc="http://creativecommons.org/ns#" href="https://eox.at" property="cc:attributionName" rel="cc:attributionURL">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2024)</i>',
@@ -77,13 +77,13 @@ const s2cloudlessLayer = new TileLayer({
 
 const map = new Map({
   layers: [
-    s2cloudlessLayer,
     new TileLayer({
       title: 'OSM',
       type: 'base',
-      visible: true,
+      visible: false,
       source: new OSM()
     }),
+    s2cloudlessLayer,
     vectorLayer
   ],
   target: 'map',
