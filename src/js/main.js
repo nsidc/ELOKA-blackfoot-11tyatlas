@@ -146,9 +146,10 @@ const displayFeatureInfo = async function (id, props) {
     if (types.includes('demo_archive')) {
       const imageLinks = await Promise.all(
         relatedRecordsByType['demo_archive'].map(async (r) => {
+          const lids = links[id].map(l => l.tid)
           const insertHtmlResponse = await fetch(`media/${r.tid}_insert.html`)
           const insertHtml = await insertHtmlResponse.text()
-          return `<li>${insertHtml}</li>`
+          return `<li x-data @mouseenter="$dispatch('hover', '${lids}')" @mouseleave="$dispatch('unhover')" class="list-row m-auto">${insertHtml}</li>`
         })
       )
       relatedHtml += `<ul class="list bg-base-100 rounded-box shadow-md my-3">
@@ -285,7 +286,7 @@ Alpine.effect(() => {
 })
 
 Alpine.effect(() => {
-  const hoverId = Alpine.store('styles').hoverId
+  const hoverChanged = Alpine.store('styles').hoverChanged
   vectorLayer.changed()
 })
 

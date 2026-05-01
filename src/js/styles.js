@@ -194,7 +194,7 @@ const styleFeature = function (feature) {
   }
   if (feature.getId() == Alpine.store('styles').selectedId) {
     return selectedStyles[getGenericType(feature)]
-  } else if (feature.getId() == Alpine.store('styles').hoverId) {
+  } else if (Alpine.store('styles').shouldHover(feature.getId())) {
     return hoverStyles[getGenericType(feature)]
   } else if (!displayed.includes(type)) {
     return new Style({})
@@ -214,7 +214,8 @@ window.Alpine = Alpine
 Alpine.store('styles', {
   data: styles,
   display: Object.keys(styles),
-  hoverId: -1,
+  hoverIds: [],
+  hoverChanged: 0,
   selectedId: -1,
   entries() {
     return Object.keys(this.data)
@@ -222,13 +223,24 @@ Alpine.store('styles', {
   count() {
     return Object.keys(this.data).length
   },
-  setHover(id) {
-    if(id != this.hoverId) {
-      this.hoverId = id
+  _setHover(ids) {
+    this.hoverIds = ids
+    this.hoverChanged++
+  },
+  setHover(ids) {
+    if(Array.isArray(ids)) {
+      this._setHover(ids)
+    } else if (!(this.hoverIds.length == 1 && this.hoverIds[0] == ids)) {
+      this._setHover(ids.split(','))
     }
   },
   unsetHover() {
-    this.hoverId = -1
+    if(this.hoverIds.length > 0) {
+      this._setHover([])
+    }
+  },
+  shouldHover(id) {
+    return this.hoverIds.includes(id)
   },
   setSelected(id) {
     if(id != this.selectedId) {

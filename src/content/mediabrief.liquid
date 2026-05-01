@@ -5,10 +5,9 @@ pagination:
   alias: media
 permalink: "media/{{ media.n2id | slugify }}_insert.html"
 ---
-<li class="list-row m-auto">
+
 <a href="media/{{ media.n2id | slugify }}" class="grid justify-items-center text-center">
 <img width="250" height="250" src="public/media/{{media.file}}"/>
 <div class="font-semibold">{{media.name}}</div>
 <div class="text-xs">{{media.caption}}</div>
 </a>
-</li>
