@@ -54,7 +54,7 @@ for (let z = 0; z < 19; ++z) {
 }
 
 const s2cloudlessLayer = new TileLayer({
-  title: 's2cloudless-2024_3857',
+  title: 'Satellite',
   type: 'base',
   visible: true,
   source: new WMTS({
@@ -78,7 +78,7 @@ const s2cloudlessLayer = new TileLayer({
 const map = new Map({
   layers: [
     new TileLayer({
-      title: 'OSM',
+      title: 'Terrain',
       type: 'base',
       visible: false,
       source: new OSM()

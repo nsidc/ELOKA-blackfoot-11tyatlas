@@ -15,19 +15,19 @@ const styles = {
       Point: new Style({
         image: new CircleStyle({
           radius: 3,
-          fill: new Fill({ color: '#66CCEE', width: 1 }),
-          stroke: new Stroke({ color: '#66CCEE', width: 1 })
+          fill: new Fill({ color: '#60B6DD', width: 1 }),
+          stroke: new Stroke({ color: '#60B6DD', width: 1 })
         })
       }),
       Line: new Style({
         stroke: new Stroke({
-          color: '#66CCEE',
+          color: '#60B6DD',
           width: 2
         })
       }),
       Polygon: new Style({
         stroke: new Stroke({
-          color: '#66CCEE',
+          color: '#60B6DD',
           width: 1
         }),
         fill: new Fill({
@@ -42,23 +42,23 @@ const styles = {
       Point: new Style({
         image: new CircleStyle({
           radius: 3,
-          fill: new Fill({ color: '#CCBB44', width: 1 }),
-          stroke: new Stroke({ color: '#CCBB44', width: 1 })
+          fill: new Fill({ color: '#BCED09', width: 1 }),
+          stroke: new Stroke({ color: '#BCED09', width: 1 })
         })
       }),
       Line: new Style({
         stroke: new Stroke({
-          color: '#CCBB44',
+          color: '#BCED09',
           width: 2
         })
       }),
       Polygon: new Style({
         stroke: new Stroke({
-          color: '#CCBB44',
+          color: '#BCED09',
           width: 1
         }),
         fill: new Fill({
-          color: '#CCBB44'
+          color: '#BCED09'
         })
       })
     }
@@ -69,23 +69,23 @@ const styles = {
       Point: new Style({
         image: new CircleStyle({
           radius: 3,
-          fill: new Fill({ color: '#BBBBBB', width: 1 }),
-          stroke: new Stroke({ color: '#BBBBBB', width: 1 })
+          fill: new Fill({ color: '#FF8C63', width: 1 }),
+          stroke: new Stroke({ color: '#FF8C63', width: 1 })
         })
       }),
       Line: new Style({
         stroke: new Stroke({
-          color: '#BBBBBB',
+          color: '#FF8C63',
           width: 2
         })
       }),
       Polygon: new Style({
         stroke: new Stroke({
-          color: '#BBBBBB',
+          color: '#FF8C63',
           width: 1
         }),
         fill: new Fill({
-          color: '#BBBBBB'
+          color: 'rgb(255, 140, 99, .65)'
         })
       })
     }
@@ -107,8 +107,8 @@ const styles = {
       Point: new Style({
         image: new CircleStyle({
           radius: 3,
-          fill: new Fill({ color: '#EE6677', width: 1 }),
-          stroke: new Stroke({ color: '#EE6677', width: 1 })
+          fill: new Fill({ color: '#FF0096', width: 1 }),
+          stroke: new Stroke({ color: '#FF0096', width: 1 })
         })
       })
     }
@@ -127,17 +127,17 @@ const hoverStyles = {
   }),
   Line: new Style({
     stroke: new Stroke({
-      color: '#992f9b',
+      color: '#ffc800',
       width: 3
     })
   }),
   Polygon: new Style({
     stroke: new Stroke({
-      color: '#992f9b',
+      color: 'rgb(255, 200, 0)',
       width: 2
     }),
     fill: new Fill({
-      color: 'rgb(153, 47, 155, .6)'
+      color: 'rgb(255, 200, 0, .6)'
     })
   })
 }
