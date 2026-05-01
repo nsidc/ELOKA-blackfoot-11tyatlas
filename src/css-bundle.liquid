@@ -4,6 +4,16 @@ permalink: bundle.css
 {% include "./node_modules/ol/ol.css" %}
 {% include "./node_modules/ol-layerswitcher/dist/ol-layerswitcher.css" %}
 
+#legend-container {
+  background-color: #334444;
+  color: #FFFFFF;
+}
+
+.map .layer-switcher .panel {
+  background-color: #334444;
+  color: #FFFFFF;
+}
+
 @media (prefers-color-scheme: light) {
   #legend-container {
       background-color: #334444;
@@ -25,8 +35,6 @@ permalink: bundle.css
     background-color: color-mix(in oklab, var(--color-base-100), transparent 3%);
   }
 }
-
-
 
 .map .layer-switcher {
     left: 0.5em;
