@@ -5,7 +5,12 @@ layout: map
 ---
   <div id="map" class="map">
   </div>
-  <div x-data id="featureCard" class="absolute z-10 size-min top-4 right-1 md:right-4 hidden" @hover="$store.styles.setHover($event.detail)">
+  <div x-data 
+   id="featureCard" 
+   class="absolute z-10 size-min top-4 right-1 md:right-4 hidden" 
+   @hover="$store.styles.setHover($event.detail)" 
+   @hover-insert="$store.feature.hoverInsert($event.detail)"
+   @unhover="$store.styles.unsetHover()">
     <div class="card card-border bg-base-100 w-120 max-w-[97vw] max-h-[calc(100vh-150px)] overflow-y-auto">
       <div class="card-body">
         <div class="card-title flex justify-between">
