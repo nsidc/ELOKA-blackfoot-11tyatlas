@@ -77,7 +77,7 @@ function setup() {
                 <div class="font-semibold">${r.data?.caption}</div>
                 <div class="text-xs">Archival Document</div>
               </div>
-              <div class="collapse-content text-sm" @click="$store.feature.select('${r.id}')">
+              <div class="collapse-content text-sm cursor-pointer" @click="$store.feature.select('${r.id}')">
                 ${responseText}
               </div>
             </div>`
@@ -95,7 +95,7 @@ function setup() {
                 <div class="font-semibold">${docInfo.blackfootname} - ${docInfo.englishname}</div>
                 <div class="text-xs">Placename</div>
               </div>
-              <div class="collapse-content text-sm" @click="$store.feature.select('${r.id}')">
+              <div class="collapse-content text-sm cursor-pointer" @click="$store.feature.select('${r.id}')">
                 ${Alpine.store('feature').generatePlacenameTable(r.id, docInfo)}
               </div>
             </div>`
