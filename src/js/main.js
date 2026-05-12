@@ -17,7 +17,8 @@ import WMTSTileGrid from 'ol/tilegrid/WMTS.js'
 import { get as getProjection } from 'ol/proj.js'
 import { getTopLeft, getWidth } from 'ol/extent.js'
 
-import Styles, { styleFeature } from './styles'
+import Styles, { styleFeature, setup } from './styles'
+import Search from './search'
 import Alpine from 'alpinejs'
 
 const DISPLAY_ATTRIBUTES = ['blackfootname', 'englishname', 'literalmeaning', 'refaltnames', 'altspelling', 'altnames', 'description']
@@ -264,12 +265,15 @@ map.on('pointermove', function (evt) {
   hoverFeatureInfo(evt.pixel)
 })
 
+Search.setup()
+Styles.setup()
 Alpine.store('feature', {
   selectedId: -1,
   async select(id) {
     this.selectedId = id
     const docInfoRes = await fetch(`features/${id}.json`)
-    const props = docInfoRes.json()
+    const props = await docInfoRes.json()
+    Alpine.store('search').hide()
     displayFeatureInfo(id, props)
   },
   unselect() {
@@ -297,4 +301,5 @@ Alpine.effect(() => {
   vectorLayer.changed()
 })
 
+Alpine.start()
 // Styles.fillLegend(vectorLayer)

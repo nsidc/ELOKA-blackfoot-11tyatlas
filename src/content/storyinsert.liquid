@@ -8,8 +8,8 @@ permalink: "story/{{ story.id | slugify }}_insert.html"
 <div x-data class="collapse collapse-arrow bg-base-100 border-base-300 border" 
  @mouseenter="$dispatch('hover-insert', '{{story.id}}')" 
  @mouseleave="$dispatch('unhover')">
-  <input id="collapse-1-toggle" type="checkbox" class="peer" />
-  <label for="collapse-1-toggle" class="fixed inset-0 hidden peer-checked:block"></label>
+  <input id="ct-{{story.id}}" type="checkbox" class="peer" />
+  <label for="ct-{{story.id}}" class="fixed inset-0 hidden peer-checked:block"></label>
   <div class="collapse-title">
     <div class="font-semibold">{{story.properties.title}}</div>
     <div class="italic text-sm">{{story.properties.reference}}</div>

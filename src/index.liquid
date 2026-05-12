@@ -36,6 +36,35 @@ layout: map
       </div>
     </div>
   </div>
+  <div x-data id="searchCard" class="absolute z-10 size-min top-4 right-1 md:right-4 hidden">
+    <div class="card card-border bg-base-100 w-120 max-w-[97vw] max-h-[calc(100vh-150px)] overflow-y-auto">
+      <div class="card-body">
+        <div class="card-title flex justify-between">
+          <h2>Search Results</h2>
+          <div class="justify-end">
+            <button @click="$store.search.hide()" class="btn btn-square btn-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div id="searchResultsList" @hover="$store.styles.setHover($event.detail)" 
+          @hover-insert="$store.feature.hoverInsert($event.detail)"
+          @unhover="$store.styles.unsetHover()">
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="legend-container" class="absolute z-10 size-fit bottom-3 left-3 p-2 rounded-md">
     <div id="legend-content">
       <ul id="legend-list" x-data>

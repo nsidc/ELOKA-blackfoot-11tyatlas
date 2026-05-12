@@ -181,14 +181,14 @@ let missingFeatures = new Set()
 
 const styleFeature = function (feature) {
   const layersString = feature.getProperties()?.layers
-  if(!layersString) {
+  if (!layersString) {
     // console.log('Feature does not have layer string')
     // console.log(feature)
     return new Style({})
   }
   const displayed = Alpine.store('styles').display
   let type = layersString.substring(3, layersString.length - 1)
-  if(type.includes(',')) {
+  if (type.includes(',')) {
     const types = type.split(',')
     type = types.find((t) => displayed.includes(t))
   }
@@ -210,83 +210,82 @@ const styleFeature = function (feature) {
   return new Style({})
 }
 
-window.Alpine = Alpine
-Alpine.store('styles', {
-  data: styles,
-  display: Object.keys(styles),
-  hoverIds: [],
-  hoverChanged: 0,
-  selectedId: -1,
-  entries() {
-    return Object.keys(this.data)
-  },
-  count() {
-    return Object.keys(this.data).length
-  },
-  _setHover(ids) {
-    this.hoverIds = ids
-    this.hoverChanged++
-  },
-  setHover(ids) {
-    if(Array.isArray(ids)) {
-      this._setHover(ids)
-    } else if (!(this.hoverIds.length == 1 && this.hoverIds[0] == ids)) {
-      this._setHover(ids.split(','))
+function setup() {
+  Alpine.store('styles', {
+    data: styles,
+    display: Object.keys(styles),
+    hoverIds: [],
+    hoverChanged: 0,
+    selectedId: -1,
+    entries() {
+      return Object.keys(this.data)
+    },
+    count() {
+      return Object.keys(this.data).length
+    },
+    _setHover(ids) {
+      this.hoverIds = ids
+      this.hoverChanged++
+    },
+    setHover(ids) {
+      if (Array.isArray(ids)) {
+        this._setHover(ids)
+      } else if (!(this.hoverIds.length == 1 && this.hoverIds[0] == ids)) {
+        this._setHover(ids.split(','))
+      }
+    },
+    unsetHover() {
+      if (this.hoverIds.length > 0) {
+        this._setHover([])
+      }
+    },
+    shouldHover(id) {
+      return this.hoverIds.includes(id)
+    },
+    setSelected(id) {
+      if (id != this.selectedId) {
+        this.selectedId = id
+      }
+    },
+    unsetSelected() {
+      this.selectedId = -1
+    },
+    drawLegendShapes(entry, canvas) {
+      const vectorContext = toContext(canvas.getContext('2d'), { size: [60, 20] })
+      if (entry.styles.Point) {
+        vectorContext.setStyle(entry.styles.Point)
+        vectorContext.drawGeometry(new Point([10, 10]))
+      }
+      if (entry.styles.Line) {
+        vectorContext.setStyle(entry.styles.Line)
+        vectorContext.drawGeometry(
+          new LineString([
+            [22, 15],
+            [25, 13],
+            [28, 10],
+            [33, 10],
+            [35, 7],
+            [38, 5]
+          ])
+        )
+      }
+      if (entry.styles.Polygon) {
+        vectorContext.setStyle(entry.styles.Polygon)
+        vectorContext.drawGeometry(
+          new Polygon([
+            [
+              [47, 2],
+              [58, 2],
+              [53, 18],
+              [42, 18],
+              [47, 2]
+            ]
+          ])
+        )
+      }
     }
-  },
-  unsetHover() {
-    if(this.hoverIds.length > 0) {
-      this._setHover([])
-    }
-  },
-  shouldHover(id) {
-    return this.hoverIds.includes(id)
-  },
-  setSelected(id) {
-    if(id != this.selectedId) {
-      this.selectedId = id
-    }
-  },
-  unsetSelected() {
-    this.selectedId = -1
-  },
-  drawLegendShapes(entry, canvas) {
-    const vectorContext = toContext(canvas.getContext('2d'), { size: [60, 20] })
-    if (entry.styles.Point) {
-      vectorContext.setStyle(entry.styles.Point)
-      vectorContext.drawGeometry(new Point([10, 10]))
-    }
-    if (entry.styles.Line) {
-      vectorContext.setStyle(entry.styles.Line)
-      vectorContext.drawGeometry(
-        new LineString([
-          [22, 15],
-          [25, 13],
-          [28, 10],
-          [33, 10],
-          [35, 7],
-          [38, 5]
-        ])
-      )
-    }
-    if (entry.styles.Polygon) {
-      vectorContext.setStyle(entry.styles.Polygon)
-      vectorContext.drawGeometry(
-        new Polygon([
-          [
-            [47, 2],
-            [58, 2],
-            [53, 18],
-            [42, 18],
-            [47, 2]
-          ]
-        ])
-      )
-    }
-  }
-})
+  })
+}
 
-Alpine.start()
-
-export default { styleFeature, styles }
-export { styleFeature, styles }
+export default { styleFeature, styles, setup }
+export { styleFeature, styles, setup }

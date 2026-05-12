@@ -23,6 +23,7 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addPassthroughCopy("src/public");
   eleventyConfig.addPassthroughCopy({"src/_data/links.json": "public/links.json"});
+  eleventyConfig.addPassthroughCopy({"src/_data/search.json": "public/search.json"});
 
   eleventyConfig.addPlugin(HtmlBasePlugin);
 
