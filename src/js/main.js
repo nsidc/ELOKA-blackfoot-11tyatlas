@@ -42,6 +42,8 @@ const vectorLayer = new VectorTileLayer({
 })
 
 const featureCard = document.getElementById('featureCard')
+const searchBarEl = document.getElementById('search-bar')
+searchBarEl.classList.remove('hidden')
 
 const projection = getProjection('EPSG:3857')
 const projectionExtent = projection.getExtent()
