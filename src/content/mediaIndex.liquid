@@ -8,8 +8,7 @@ layout: default
     {%- for m in media %}
     <a href="{{ m.n2id | slugify }}" class="text-center">
         <img class="pt-1 pb-3 px-5 lg:px-10" src="../public/media/{{m.file}}"/>
-        <div class="font-semibold">{{m.name}}</div>
-        <div class="text-xs">{{m.caption}}</div>
+        <div class="font-semibold">{{m.caption}}</div>
     </a>
     {%- endfor -%}
 </div>

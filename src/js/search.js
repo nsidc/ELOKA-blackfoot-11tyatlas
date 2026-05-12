@@ -19,13 +19,14 @@ function setup() {
     types: [],
     data: null,
     async search() {
+      Alpine.store('feature').unselect()
       if (this.data == null) {
         const dataRes = await fetch('./public/search.json')
         const dataObj = await dataRes.json()
         this.types = Object.keys(fields)
         const searchData = {}
         for (const t of this.types) {
-          searchData[t] = new MiniSearch({fields: fields[t], storeFields: ['id']})
+          searchData[t] = new MiniSearch({fields: fields[t], storeFields: fields[t]})
           searchData[t].addAll(dataObj[t])
         }
         this.data = searchData
@@ -41,14 +42,14 @@ function setup() {
         let j = 0
         while(addedResults < totalResults) {
           if(i >= this.results.length) {
-            mergedArray.push({id: hits[j].id, t, score: hits[j].score})
+            mergedArray.push({id: hits[j].id, t, score: hits[j].score, data: hits[j]})
             j++
           } else if(j >= hits.length) {
             mergedArray.push(this.results[i])
             i++
           } else{
             if(hits[j].score > this.results[i].score) {
-              mergedArray.push({id: hits[j].id, t, score: hits[j].score})
+              mergedArray.push({id: hits[j].id, t, score: hits[j].score, data: hits[j]})
               j++
             } else {
               mergedArray.push(this.results[i])
@@ -68,7 +69,19 @@ function setup() {
       let resultsListHtml = ''
       for(const r of this.showResults) {
         if(r.t == 'demo_archive') {
-          resultsListHtml += await (await fetch(`media/${r.id}_insert.html`)).text()
+          const responseText = await (await fetch(`media/${r.id}_insert.html`)).text()
+          let displayHtml = `<div class="collapse collapse-arrow bg-base-100 border-base-300 border"
+            @mouseenter="$dispatch('hover', '${r.id}')" @mouseleave="$dispatch('unhover')">
+              <input type="checkbox" class="peer" />
+              <div class="collapse-title">
+                <div class="font-semibold">${r.data?.caption}</div>
+                <div class="text-xs">Archival Document</div>
+              </div>
+              <div class="collapse-content text-sm" @click="$store.feature.select('${r.id}')">
+                ${responseText}
+              </div>
+            </div>`
+          resultsListHtml += displayHtml
         } else if(r.t == 'demo_story') {
           resultsListHtml += await (await fetch(`story/${r.id}_insert.html`)).text()
         } else if(r.t == 'demo_archy') {
@@ -79,8 +92,8 @@ function setup() {
             @mouseenter="$dispatch('hover', '${r.id}')" @mouseleave="$dispatch('unhover')">
               <input type="checkbox" class="peer" />
               <div class="collapse-title">
-                <div class="font-semibold">${docInfo.blackfootname}</div>
-                <div class="text-xs">${docInfo.englishname}</div>
+                <div class="font-semibold">${docInfo.blackfootname} - ${docInfo.englishname}</div>
+                <div class="text-xs">Placename</div>
               </div>
               <div class="collapse-content text-sm" @click="$store.feature.select('${r.id}')">
                 <div class="text-sm">

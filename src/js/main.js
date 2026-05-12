@@ -148,7 +148,7 @@ const displayFeatureInfo = async function (id, props) {
       const imageLinks = await Promise.all(
         relatedRecordsByType['demo_archive'].map(async (r) => {
           const insertHtmlResponse = await fetch(`media/${r.tid}_insert.html`)
-          return await insertHtmlResponse.text()
+          return '<li>'+ await insertHtmlResponse.text() +'</li>'
         })
       )
       relatedHtml += `<ul class="list bg-base-100 rounded-box shadow-md my-3">
