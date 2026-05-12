@@ -96,9 +96,7 @@ function setup() {
                 <div class="text-xs">Placename</div>
               </div>
               <div class="collapse-content text-sm" @click="$store.feature.select('${r.id}')">
-                <div class="text-sm">
-                  ${docInfo.blackfootname}
-                </div>
+                ${Alpine.store('feature').generatePlacenameTable(r.id, docInfo)}
               </div>
             </div>`
         } else {

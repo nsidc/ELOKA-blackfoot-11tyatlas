@@ -104,10 +104,7 @@ function groupBy(arr, property) {
   }, {})
 }
 
-const displayFeatureInfo = async function (id, props) {
-  Alpine.store('styles').setSelected(id)
-  const info = document.getElementById('info')
-
+const placenameInfoTable = function(id, props) {
   let infoHtml = ''
   const pkeys = Object.keys(props)
   if(pkeys.includes('blackfootname')) {
@@ -137,6 +134,15 @@ const displayFeatureInfo = async function (id, props) {
   if(pkeys.includes('image')) {
     console.log('image not handled for ' + id)
   }
+  return `<table class="table-sm"><tbody>${infoHtml}</tbody></table>`
+}
+
+const displayFeatureInfo = async function (id, props) {
+  Alpine.store('search').hide()
+  Alpine.store('styles').setSelected(id)
+  const info = document.getElementById('info')
+
+  let infoHtml = placenameInfoTable(id, props)
 
 
   let relatedHtml = ''
@@ -202,7 +208,7 @@ const displayFeatureInfo = async function (id, props) {
   } else {
     featureTitle.innerText = 'Feature Info'
   }
-  info.innerHTML = `<table class="table-sm"><tbody>${infoHtml}</tbody></table>${relatedHtml}`
+  info.innerHTML = `${infoHtml}${relatedHtml}`
   featureCard.classList.remove('hidden')
 }
 
@@ -273,7 +279,6 @@ Alpine.store('feature', {
     this.selectedId = id
     const docInfoRes = await fetch(`features/${id}.json`)
     const props = await docInfoRes.json()
-    Alpine.store('search').hide()
     displayFeatureInfo(id, props)
   },
   unselect() {
@@ -283,6 +288,9 @@ Alpine.store('feature', {
   hoverInsert(id) {
     const lids = links[id].map(l => l.tid)
     Alpine.store('styles').setHover(lids)
+  },
+  generatePlacenameTable(id, props) {
+    return placenameInfoTable(id, props)
   }
 })
 
