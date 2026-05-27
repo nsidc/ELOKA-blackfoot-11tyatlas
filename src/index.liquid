@@ -65,18 +65,25 @@ layout: map
       </div>
     </div>
   </div>
-  <div id="legend-container" class="absolute z-10 size-fit bottom-3 left-3 p-2 rounded-md">
-    <div id="legend-content">
-      <ul id="legend-list" x-data>
-        <template x-for="[id, entry] in Object.entries($store.styles.data)">
-          <li class="flex gap-1">
-            <input x-data type="checkbox" :value="id" x-model="$store.styles.display" class="toggle" />
-            <canvas x-init="$nextTick(() => { $store.styles.drawLegendShapes(entry, $el)})"></canvas>
-            <span x-text="entry.title"></span>
-          </li>
-        </template>
-      </ul>
-    </div>
+  <div id="legend-container" class="absolute z-10 size-fit bottom-3 left-3 p-0 rounded-md">
+    <details class="collapse collapse-plus" name="legend-accordion" open>
+      <summary class="collapse-title">
+        <div class="font-semibold">Legend</div>
+      </summary>
+      <div class="collapse-content">
+        <div id="legend-content">
+        <ul id="legend-list" x-data>
+          <template x-for="[id, entry] in Object.entries($store.styles.data)">
+            <li class="flex gap-1">
+              <input x-data type="checkbox" :value="id" x-model="$store.styles.display" class="toggle" />
+              <canvas x-init="$nextTick(() => { $store.styles.drawLegendShapes(entry, $el)})"></canvas>
+              <span x-text="entry.title"></span>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </details>
+  </div>
     <!--
     <button class="btn btn-sm">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
