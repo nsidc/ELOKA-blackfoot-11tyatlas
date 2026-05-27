@@ -118,7 +118,7 @@ const placenameInfoTable = function(id, props) {
   if(pkeys.includes('literalmeaning')) {
     infoHtml += `<tr><th>Literal Meaning</th><td>${props.literalmeaning}</td></tr>`
   }
-  if(props?.refaltname) {
+  if(props?.refaltnames) {
     infoHtml += `<tr><th>Reference</th><td>${props.refaltnames}</td></tr>`
   }
   if(props?.altspelling) {

@@ -41,7 +41,7 @@ const styles = {
     styles: {
       Point: new Style({
         image: new CircleStyle({
-          radius: 3,
+          radius: 4,
           fill: new Fill({ color: '#BCED09', width: 1 }),
           stroke: new Stroke({ color: '#181e01', width: 1 })
         })
