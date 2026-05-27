@@ -5,7 +5,7 @@ pagination:
   alias: media
 permalink: "media/{{ media.n2id | slugify }}_insert.html"
 ---
-<a x-data @mouseenter="$dispatch('hover-insert', '{{media.n2id}}')" @mouseleave="$dispatch('unhover')" class="list-row m-auto" href="media/{{ media.n2id | slugify }}" class="grid justify-items-center text-center">
-<img width="250" height="250" src="public/media/{{media.file}}"/>
+<a x-data @mouseenter="$dispatch('hover-insert', '{{media.n2id}}')" @mouseleave="$dispatch('unhover')" href="media/{{ media.n2id | slugify }}" class="grid grid-rows-1 justify-items-center text-center">
+<div><img width="250" height="250" src="public/media/{{media.file}}"/></div>
 <div class="font-semibold">{{media.caption}}</div>
 </a>

@@ -1,4 +1,5 @@
 import { VentoPlugin } from "eleventy-plugin-vento";
+import eleventyNavigationPlugin from "@11ty/eleventy-navigation";
 import { HtmlBasePlugin } from "@11ty/eleventy";
 import fs from 'fs';
 import path from 'path';
@@ -26,6 +27,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({"src/_data/search.json": "public/search.json"});
 
   eleventyConfig.addPlugin(HtmlBasePlugin);
+  eleventyConfig.addPlugin(eleventyNavigationPlugin);
 
   //compile tailwind before eleventy processes the files
   eleventyConfig.on('eleventy.before', async () => {

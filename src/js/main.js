@@ -122,10 +122,10 @@ const placenameInfoTable = function(id, props) {
     infoHtml += `<tr><th>Reference</th><td>${props.refaltnames}</td></tr>`
   }
   if(props?.altspelling) {
-    infoHtml += `<tr><th>Alt. Spellings</th><td>${props.altspelling}</td></tr>`
+    infoHtml += `<tr><th>Alt. Spellings</th><td>${props.altspelling.replaceAll('\n', '<br>')}</td></tr>`
   }
   if(props?.altnames) {
-    infoHtml += `<tr><th>Alt. Names</th><td>${props.altnames}</td></tr>`
+    infoHtml += `<tr><th>Alt. Names</th><td>${props.altnames.replaceAll('\n', '<br>')}</td></tr>`
   }
   if(props?.description) {
     infoHtml += `<tr><th>Description</th><td>${props.description}</td></tr>`
@@ -156,7 +156,7 @@ const displayFeatureInfo = async function (id, props) {
       const imageLinks = await Promise.all(
         relatedRecordsByType['demo_archive'].map(async (r) => {
           const insertHtmlResponse = await fetch(`media/${r.tid}_insert.html`)
-          return '<li>'+ await insertHtmlResponse.text() +'</li>'
+          return '<li class="list-row m-auto">'+ await insertHtmlResponse.text() +'</li>'
         })
       )
       relatedHtml += `<ul class="list bg-base-100 rounded-box shadow-md my-3">
